@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{name}}</title>
+    </head>
+    <body>
+
+    {% if name == "tanuki" %}
+    <h1>{{name}}</h1>
+    {% elif name %}
+    <h1>キツネ×{{name}}</h1>
+    {% else %}
+    <h1>kitsune</h1>
+    {% endif %}
+
+    <form action="/index" method="POST">
+        <input type="text" name="name" placeholder="Enter name">
+        <input type="submit" value="Submit">
+    </form>
+
+    <img src="/static/images/kitsune.jpg" alt="fox">
+
+    {% for word in song %}
+    <p>{{word}}</p>
+    {% endfor %}
+
+    </body>
+</html>
