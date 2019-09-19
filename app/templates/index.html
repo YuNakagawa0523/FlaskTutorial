@@ -4,6 +4,9 @@
     <head>
         <title>{{name}}</title>
     </head>
+
+    <a href="/logout">ログアウトする</a>
+
     <body>
 
     {% if name == "tanuki" %}
@@ -13,11 +16,6 @@
     {% else %}
     <h1>kitsune</h1>
     {% endif %}
-
-    <form action="/index" method="POST">
-        <input type="text" name="name" placeholder="Enter name">
-        <input type="submit" value="Submit">
-    </form>
 
     <img src="/static/images/kitsune.jpg" alt="fox">
 
