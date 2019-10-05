@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<!--　参考資料:Vue.js入門<http://www.tohoho-web.com/ex/vuejs.html>-->
+
+    <head>
+        <meta charset="utf-8">
+        <title>VueTutorial</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    </head>
+    
+    <body>
+        <style>
+        .tuyoi {
+            color: red;
+        }
+        </style>
+        <div id="App">
+            <input v-model="name">
+            <button @click="doAdd">モンスターを追加</button>
+            <ul>
+                <li v-for="item in list" v-bind:key="item.id" v-bind:class="{ tuyoi: item.hp > 300 }">
+                    ID.{{ item.id }} {{ item.name }} HP.{{ item.hp }}
+                    <span v-if="item.hp > 300">つよい！</span>
+                    <button @click="doRemove(index)">モンスターを削除</button>
+                </li>
+            </ul>
+        </div>
+        <script>
+            var app = new Vue({
+                el: '#App',
+                data: {
+                    name: "キマイラ",
+                    list: [
+                        { id: 1, name: 'スライム', hp: 100 },
+                        { id: 2, name: 'ゴブリン', hp: 200 },
+                        { id: 3, name: 'ドラゴン', hp: 500 }
+                    ]
+                },
+                methods: {
+                    doAdd: function(){
+                        var max = this.list.reduce(function(a,b){<!-- idの最大値取得 -->
+                            return a > b.id ? a : b.id<!-- リスト内隣接2要素を左から関数で処理し1つの値にする-->
+                        }, 0)
+                        this.list.push({
+                            id: max + 1,
+                            name: this.name,
+                            hp: 500
+                        })
+                    },
+                    doRemove: function(index){
+                        this.list.splice(index, 1)
+                    }
+                }
+            })
+        </script>
+    </body>
+
+</html>
+        
+        
+

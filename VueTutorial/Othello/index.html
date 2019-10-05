@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.7/vue.min.js"></script>
+    </head>
+    
+    <body>
+        <style>
+            @import url(style.css);  <!-- 無くてもいい?? -->
+        </style>
+    
+        <p>オセロ</p>
+        <div id="app">
+          <p>白:{{ w }}, 黒:{{ b }}</p>
+          <p>{{ ["白","黒"][wb] }}の手番<p>
+          <div v-for="i in 8" class="container">
+            <div v-for="j in 8" class="waku">
+              <div :class="{ 'white': xy[i][j]==0, 'black': xy[i][j]==1 }" @click="oku(i, j)"></div>
+            </div>
+          </div>
+          <p>
+            <button @click="pass">pass</button>
+            <button @click="reset">reset</button>
+          </p>
+        </div>
+
+    </body>
+    
+    <script>
+        var vm = new Vue({
+          el: '#app',
+          data: {
+            wb: 1,
+            xy: [
+              [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 0, 1, 2, 2, 2, 3],
+              [3, 2, 2, 2, 1, 0, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            ],
+          },
+          computed: {
+            w: function() {
+              return this.xy.join(',').match(/0/g).length;
+            },<!-- join:リストの要素をすべてくっつける match:0と同一のモノをリストで返す(/0/g)は正規表現-->
+            b: function() {
+              return this.xy.join(',').match(/1/g).length;
+            },
+          },
+          methods: {
+            oku: function(x, y) {
+              if (this.xy[x][y] != 2) return;<!--　駒が置いてあるフィールドの時は何もしない -->
+              var flag = false;
+              for (var dx = -1; dx <= 1; dx++) {
+                for (var dy = -1; dy <= 1; dy++) {
+                  if (dx == 0 && dy == 0) continue;<!-- 押したマス以外の8方位 -->
+                  var k = 1;
+                  while (this.xy[x + k * dx][y + k * dy] <= 1) {<!-- 向いた方向に駒がある限り -->
+                    if (this.xy[x + k * dx][y + k * dy] == this.wb) {<!-- 進んだ先に自分の駒があるなら -->
+                      k = 1;<!--　もう一度隣の駒から-->
+                      while (this.xy[x + k * dx][y + k * dy] == 1 - this.wb) {<!-- 相手の駒すべてを -->
+                        flag = true;<!-- (ひっくり返したflag) -->
+                        this.xy[x + k * dx][y + k * dy] = this.wb;<!-- ひっくり返す -->
+                        k++;
+                      }
+                      break;<!-- ひっくり返し尽くしたら次の方向を見る -->
+                    }
+                    k++;
+                  }
+                }
+              }
+              if (flag == false) return;<!-- 一枚もひっくり返してないときは終了 -->
+              this.xy[x][y] = this.wb;<!-- ひっくり返せる時は駒を置く -->
+              this.wb = 1 - this.wb;<!-- 相手のターン -->
+              this.xy.push();
+            },
+            pass: function() {
+              this.wb = 1 - this.wb;
+            },
+            reset: function() {
+              this.xy = [
+              [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 0, 1, 2, 2, 2, 3],
+              [3, 2, 2, 2, 1, 0, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 2, 2, 2, 2, 2, 2, 2, 2, 3],
+              [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            ];
+            },
+          },
+        });
+    </script>
+    
+</html>

@@ -1,0 +1,23 @@
+p {
+  text-align: center;
+}
+div {
+  min-width: 50px;
+  min-height: 50px;
+}
+.container {
+  display: flex;
+  justify-content: center;
+}
+.waku {
+  border: 1px solid black;
+  background-color: green;
+}
+.white {
+  border-radius: 25px;
+  background-color: white;
+}
+.black {
+  border-radius: 25px;
+  background-color: black;
+}

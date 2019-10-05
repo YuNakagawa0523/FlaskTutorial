@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<!--　参考資料:Vue.js入門<http://www.tohoho-web.com/ex/vuejs.html>-->
+
+    <head>
+        <meta charset="utf-8">
+        <title>VueTutorial</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    </head>
+    
+    <body>
+        <style>
+            .chapter {
+                color: blue;
+            }
+        </style>
+        
+        
+        <div id="app-1">
+            <h2 class="chapter">1</h2>
+            <h3>{{abc}}</h3>
+            <div v-html="abc"></div>
+        </div>
+        <script>
+            var app1 = new Vue({
+                el: "#app-1",
+                data :{abc:"<b>kitsune</b>"}
+            })
+        </script>
+        
+        
+        <div id="app-2">
+            <h2 class="chapter">2</h2><!-- v-modelはhtml変更をリアルタイムでmodelに反映-->
+            <input type="text" v-model="message"><br><!-- type="text"は省略可-->
+            文字列固定<input type="checkbox" @click="cli">
+            <span v-if="ch">{{message}}</span>
+            <span v-else>{{message2}}</span>
+            <div v-once>Message: {{message}}</div>
+            <div v-pre>Message: {{message}}</div>
+            <div class="error" v-if="error.require">必須項目です。</div>
+            <div class="error" v-if="error.tooLong">長すぎます。</div>
+        </div>
+        <style>
+            #app-2 .error {
+                color: red;
+            }
+        </style>
+        <script>
+            var app2 = new Vue({
+                el: '#app-2',
+                methods: {
+                    cli: function(e) {
+                        this.ch = e.target.checked,<!--chにeがチェックされてたらtrueを代入-->
+                        this.message2 = this.message
+                    }
+                },
+                watch: {
+                    message: function(newVal) {
+                        this.error.require = (newVal.length < 1);
+                        this.error.tooLong = (newVal.length > 5) ? true : false;
+                    }
+                },
+                data: {
+                    ch: false,
+                    message: 'fox',
+                    message2:'',
+                    error: {
+                        require: false,
+                        tooLong: false
+                    }
+                }
+            })
+        </script>
+        
+        
+        <div id="app-3">
+            <h2 class="chapter">3</h2> 
+            <input type="checkbox" @click="cccc" checked><!--onclickだと動かない-->
+            <span v-if="seen">🦊</span>
+            <span v-else>🐈</span>
+        </div>
+        <script>
+            var app3 = new Vue({
+                el: "#app-3",
+                data: {seen:true},
+                methods: {
+                    cccc: function(e) {
+                        this.seen = e.target.checked<!--eがチェックされてたらtrueを返す-->
+                    }
+                }
+            })
+        </script>
+        
+        
+        <div id="app-4">
+            <h2 class="chapter">4</h2>
+            <input type="radio" name="animals" @click="type='A'"><br><!-- v methodを使うときはapp4.とかは要らないようだ-->
+            <input type="radio" name="animals" @click="type='B'">
+            <input type="radio" name="animals" onclick="app4.type='C'" checked>
+            <span v-if="type=='A'">🦊</span>
+            <span v-else-if="type=='B'">🐈</span>
+            <span v-else>🐶</span>
+        </div>
+        <script>
+            var app4 = new Vue({
+                el: '#app-4',
+                data: { type: 'A' }
+            })
+        </script>
+        
+        
+        <div id="app-5">
+            <h2 class="chapter">5</h2>
+            <ul><!--順序のないリスト-->
+            <li v-for="animal in animalList">{{animal}}</li>
+            </ul>
+            <ol><!--順序のあるリスト-->
+            <li v-for="animal in animalList">{{animal}}</li>
+            </ol>
+            <span v-for="animal in animalList">{{animal}} </span>
+        </div>
+        <script>
+            var app5 = new Vue({
+                el: "#app-5",
+                data: {animalList: ["fox","cat","dog","raccoon"]}
+            })
+        </script>
+        
+        <div id="app-6">
+            <h2 class="chapter">6</h2>
+            <button v-on:click     ="fox6">fox?</button>
+            <button     @click.once="fox6">fox...</button><!-- @は v-on:の省略形-->
+            <input type="button" v-bind:value="b6"><!-- html表示に変数埋め込みしたいときに使う-->
+            <input type="button"       :value="b6" @click="fox6"><!-- :は v-bind:の省略形-->
+        <!-- :value.camel が使えなかった-->
+        </div>
+        <script>
+            var app6 = new Vue({
+                el: "#app-6",
+                data: { b6: "fox-festival" } ,
+                methods: {
+                    fox6: function(){
+                        alert("🦊🦊🦊");
+                    }
+                }
+            })
+        </script>
+        
+        
+        <div id="app-7">
+            <h2 class="chapter">7</h2>
+            <input v-model="m7"><br>
+            {{withfox}}<br>
+            <input v-model="n7"><br>
+            {{number}}
+        </div>
+        <script>
+            var app7 = new Vue({
+                el: "#app-7",
+                data: {
+                    m7:"",
+                    n7:0,
+                },
+                computed: {
+                    withfox: function(){
+                        return this.m7 + " × fox";
+                    },
+                    number: function(){
+                        return this.n7 ** 2 + +this.n7;<!--x^2+x-->
+                    }
+                }
+            })
+        </script>
+        
+        
+        <div id="app-8">
+            <h2 class="chapter">8</h2>
+            <form>
+                <input type="text" name="text1" :value="message">
+                <input type="button" @click="change" value="Change">
+            </form>
+            <div>変更前: {{ oldmsg }}</div>
+            <div>変更後: {{ newmsg }}</div>
+        </div>
+        <script>
+            var app8 = new Vue({
+                el: "#app-8",
+                data: {
+                    message: "new",
+                    newmsg: "new",
+                    oldmsg: "old"
+                },
+                watch: {
+                    message: function(newVal,oldVal){
+                        this.newmsg = newVal;
+                        this.oldmsg = oldVal;
+                    }
+                },
+                methods: {
+                    change: function(e){
+                        this.message = e.target.form.text1.value;
+                    }
+                }
+            })
+        </script>
+        
+        
+        <div id="app-9">
+            <h2 class="chapter">9</h2>
+            <p>{{ message.value }}<p>
+            <p>文字数:{{ message.value.length }}<p>
+            <p>{{ list[2] }}<p>
+            <p>{{ list[num] }}<p>
+        </div>
+        <script>
+            var app9 = new Vue({
+                el: "#app-9",
+                data: {
+                    message: {
+                      value: 'Hello fox!'
+                    },
+                    list: ['🦊', '🦊🦊', '🦊🦊🦊'],
+                    num: 1
+                }
+            })
+        </script>
+
+
+        <div id="app-10">
+            <h2 class="chapter">10</h2>
+            <button @click="increment">countup</button>
+            <button @click="reset">reset</button>
+            <p>{{ n }}匹</p>
+            <p>{{ nfox }}</p>
+        </div>
+        <script>
+            var app10 = new Vue({
+                el: "#app-10",
+                data: { n: 0 },
+                methods: {
+                    increment: function(){ this.n += 1 },
+                    reset:     function(){ this.n  = 0 }
+                },
+                computed: {
+                    nfox: function(){ return "🦊".repeat(this.n) }
+                }
+            })
+        </script>
+        
+        <style>
+        .item {
+          padding: 4px 8px;
+          transition: background-color 0.4s;
+        }
+        .is-active {
+          background: #ffeaea;
+        }
+        </style>
+        <div id="app-11">
+            <h2 class="chapter">11</h2>
+            <button @click="isActive=!isActive">isActiveを切り替える</button>
+            <p v-bind:class="{ 'child': isChild, 'is-active': isActive }" class="item">
+              動的なクラス<!-- class={'trueの時のクラス名':条件式} -->
+            </p>
+            <p v-bind:style="{ color: textColor, backgroundColor: bgColor }" class="item">
+              動的なスタイル
+            </p>
+        </div>
+        <script>
+            var app11 = new Vue({
+              el: '#app-11',
+              data: {
+                isChild: true,
+                isActive: true,
+                textColor: 'red',
+                bgColor: 'lightgray'
+              }
+            })
+        </script>
+        
+        
+        <div id="app-">
+            <h2 class="chapter"></h2>
+            
+        </div>
+        <script>
+            var app = new Vue({
+                el: "#app-",
+                
+            })
+        </script>
+        
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
