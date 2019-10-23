@@ -1,0 +1,36 @@
+#rank {
+  color : blue;
+}
+#sign {
+  color : red;
+}
+#message {
+  background : pink;
+}
+#item {
+  color : red;
+}
+#item2 {
+  text-align : center;
+}
+#Color {
+  text-decoration : underline;
+}
+.green {
+  color : green
+}
+.blue {
+  color : blue
+}
+.yellow {
+  color : yellow
+}
+.red {
+  color : red
+}
+.pink{
+  color : pink 
+}
+.orange{
+  color : orange 
+}

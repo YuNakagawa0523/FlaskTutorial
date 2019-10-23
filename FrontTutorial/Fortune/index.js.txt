@@ -1,0 +1,38 @@
+$(function() {
+  $("#button").click(function() {
+    var signName = $("#sign-list option:selected").text();
+    var url ="http://api.jugemkey.jp/api/horoscope/free/" + $("#sign-date option:selected").text();
+
+    getSign(url, signName, function(sign){
+      $("#rank").text(sign.rank);
+      $("#sign").text(sign.sign);
+      $("#message").text(sign.content);
+      $("#item").text(sign.item);
+      //$("#color").text(sign.color);
+      
+      if(sign.rank == '1'){
+        $("#message2").text("おめでとう！");
+      }else{
+        $("#message2").text("");
+      }
+      
+      $("#color").text(sign.color).removeClass();
+      if(sign.color == "グリーン"){
+        $("#color").text(sign.color).addClass("green");
+      }else if(sign.color == "ブルー"){
+        $("#color").text(sign.color).addClass("blue");
+      }else if(sign.color == "レッド"){
+        $("#color").text(sign.color).addClass("red");
+      }else if(sign.color == "イエロー"){
+        $("#color").text(sign.color).addClass("yellow");
+      }else if(sign.color == "ピンク"){
+        $("#color").text(sign.color).addClass("pink");
+      }else if(sign.color == "オレンジ"){
+        $("#color").text(sign.color).addClass("orange");
+      }else{
+        $("#color").text(sign.color);
+      }
+      
+    });
+  });
+});
